@@ -1,31 +1,39 @@
 package ru.job4j.tracker.store;
 
-import ru.job4j.tracker.model.Item;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-public class MemTracker {
+import ru.job4j.tracker.model.Item;
+
+public class MemTracker implements Store {
 
     private final List<Item> items = new ArrayList<>();
 
     private int id = 0;
 
+    @Override
+    public void init() {
+    }
+
+    @Override
     public Item add(Item item) {
         item.setId(id++);
         items.add(item);
         return item;
     }
 
+    @Override
     public List<Item> findAll() {
         return items;
     }
 
+    @Override
     public Item findById(int id) {
         int index = indexOf(id);
         return index != -1 ? items.get(index) : null;
     }
 
+    @Override
     public List<Item> findByName(String key) {
         List<Item> result = new ArrayList<>();
         for (Item item : items) {
@@ -36,6 +44,7 @@ public class MemTracker {
         return result;
     }
 
+    @Override
     public boolean replace(int id, Item item) {
         int index = indexOf(id);
         if (index == -1) {
@@ -46,6 +55,7 @@ public class MemTracker {
         return true;
     }
 
+    @Override
     public boolean delete(int id) {
         int index = indexOf(id);
         if (index == -1) {
