@@ -15,10 +15,6 @@ import org.junit.jupiter.api.Test;
 import ru.job4j.tracker.model.Item;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class SqlTrackerTest {
 
@@ -56,50 +52,42 @@ public class SqlTrackerTest {
     @Test
     public void whenSaveItemAndFindByGeneratedIdThenMustBeTheSame() {
         SqlTracker tracker = new SqlTracker(connection);
-        Item item = new Item("item");
-        tracker.add(item);
+        Item item = tracker.add(new Item("item"));
         assertThat(tracker.findById(item.getId())).isEqualTo(item);
     }
 
     @Test
     public void whenSaveItemAndReplaceThenMustBeTheReplaced() {
         SqlTracker tracker = new SqlTracker(connection);
-        Item item1 = new Item("item1");
+        Item item1 = tracker.add(new Item("item1"));
         Item item2 = new Item("item2");
-        tracker.add(item1);
-        tracker.replace(item1.getId(), item2);
         item2.setId(item1.getId());
         boolean result = tracker.replace(item1.getId(), item2);
-        assertTrue(result);
+        assertThat(result).isTrue();
         assertThat(tracker.findById(item1.getId())).isEqualTo(item2);
     }
 
     @Test
     public void whenSaveItemAndDeleteThenMustBeTheNull() {
         SqlTracker tracker = new SqlTracker(connection);
-        Item item = new Item("item");
-        tracker.add(item);
+        Item item = tracker.add(new Item("item"));
         tracker.delete(item.getId());
-        assertThat(tracker.findById(item.getId()), is(nullValue()));
+        assertThat(tracker.findById(item.getId())).isNull();
     }
 
     @Test
     public void whenSaveItemAndFindAllThenMustBeTheAll() {
         SqlTracker tracker = new SqlTracker(connection);
-        Item item1 = new Item("item1");
-        Item item2 = new Item("item2");
-        tracker.add(item1);
-        tracker.add(item2);
+        Item item1 = tracker.add(new Item("item1"));
+        Item item2 = tracker.add(new Item("item2"));
         assertThat(tracker.findAll()).isEqualTo(List.of(item1, item2));
     }
 
     @Test
     public void whenSaveItemAndFindByNameThenMustBeTheSame() {
         SqlTracker tracker = new SqlTracker(connection);
-        Item item1 = new Item("item1");
-        Item item2 = new Item("item2");
-        tracker.add(item1);
-        tracker.add(item2);
+        tracker.add(new Item("item1"));
+        Item item2 = tracker.add(new Item("item2"));
         assertThat(tracker.findByName("item2")).isEqualTo(List.of(item2));
     }
 }
