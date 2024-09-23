@@ -76,4 +76,8 @@ public class MemTracker implements Store {
         return index;
     }
 
+    @Override
+    public void close() {
+
+    }
 }
